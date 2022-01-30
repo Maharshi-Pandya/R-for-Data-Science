@@ -101,3 +101,40 @@ View(df)
 
 # Find NA depature times (maybe cancelled flights)
 dplyr::filter(flights, is.na(dep_time))
+
+
+# ------------ Arrange ----------------
+tdf <- dplyr::arrange(flights, year, month, day)
+View(tdf)
+
+# desc for arranging the rows in descending order
+tdf <- dplyr::arrange(flights, dplyr::desc(dep_delay))
+View(tdf)
+
+# missing values are always sorted at the end
+df <- tibble(x = c(5, 2, NA))
+arrange(df, x)
+arrange(df, desc(x))
+
+# ---------------- Excersice 5.3.1 -----------------
+
+# 1) How could you use arrange() to sort all 
+# missing values to the start? (Hint: use is.na()).
+
+arrange(df, desc(is.na(x)), x)
+
+# 2) Sort flights to find the most delayed flights.
+# Find the flights that left earliest.
+
+tdf <- dplyr::arrange(flights, dplyr::desc(dep_delay))
+View(tdf)
+
+tdf <- dplyr::arrange(flights, dep_delay)
+View(tdf)
+
+# 3) Find the fastest flights
+View(dplyr::arrange(flights, air_time))
+
+# 4) Flights travelled furthest and shortest
+View(dplyr::arrange(flights, dplyr::desc(distance)))
+View(dplyr::arrange(flights, distance))
