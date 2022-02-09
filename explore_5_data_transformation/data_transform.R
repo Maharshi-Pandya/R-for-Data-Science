@@ -135,6 +135,41 @@ View(tdf)
 # 3) Find the fastest flights
 View(dplyr::arrange(flights, air_time))
 
-# 4) Flights travelled furthest and shortest
+# 4) Flights traveled furthest and shortest
 View(dplyr::arrange(flights, dplyr::desc(distance)))
 View(dplyr::arrange(flights, distance))
+
+# ----------- Select ------------------
+# Narrow down on variables
+
+dplyr::select(flights, year, month, day)
+
+# Select columns between two columns
+dplyr::select(flights, year:day)
+dplyr::select(flights, -(year:day))
+
+# 1) starts_with("abc")
+# 2) ends_with("xyz")
+# 3) contains("ijk")
+# 4) matches("(.)\\1") regex
+# 5) num_range("x", 1:3) matches x1, x2, x3
+
+?select
+
+# It can be used to rename columns, but then it drops
+# all the columns not explicitly mentioned
+# So use rename instead
+
+dplyr::rename(flights, tail_num=tailnum)
+
+# everything() helper can be used to move some columns to start
+dplyr::select(flights, time_hour, arr_time, everything())
+
+# What does any_of helper do?
+# A: Matches variable names in a character vector but no error is thrown
+vars <- c("year", "month", "day", "dep_delay")
+dplyr::select(flights, any_of(vars))
+
+# By default the selection helpers which match patterns are
+# case insensitive. We change it by passing the option of FALSE
+dplyr::select(flights, contains("TIME", ignore.case = FALSE))
