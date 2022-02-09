@@ -173,3 +173,29 @@ dplyr::select(flights, any_of(vars))
 # By default the selection helpers which match patterns are
 # case insensitive. We change it by passing the option of FALSE
 dplyr::select(flights, contains("TIME", ignore.case = FALSE))
+
+
+# --------------- Mutate -------------------
+# It is useful to add new columns which are functions of existing columns
+
+# Smaller dataset with fewer variables
+flights_sml <- select(flights,
+                      year:day,
+                      ends_with("delay"),
+                      distance,
+                      air_time)
+
+?flights
+
+# We now mutate
+dplyr::mutate(flights_sml,
+              gain = dep_delay - arr_delay,
+              speed = distance / air_time * 60)
+
+# We can refer to the columns we created
+dplyr::mutate(flights_sml,
+              gain = dep_delay - arr_delay,
+              hours = air_time / 60,
+              gain_per_hours = gain / hours)
+
+# transmute drops the existing variables and keeps the new ones
