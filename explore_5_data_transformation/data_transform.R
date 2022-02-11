@@ -199,3 +199,30 @@ dplyr::mutate(flights_sml,
               gain_per_hours = gain / hours)
 
 # transmute drops the existing variables and keeps the new ones
+
+# Useful creation functions
+# There are functions which we can use with mutate. They must be vectorised
+?flights
+
+transmute(flights,
+          dep_time,
+          hour = dep_time %/% 100,
+          minute = dep_time %% 100)
+
+# lag() and lead() allow us to refer to lagging and leading values
+(x <- 1:10)
+lag(x)
+lead(x)
+
+# cumulative and rolling aggregates
+cumsum(x)
+cummean(x)
+
+# ranking functions ranks the data-set
+min_rank(c(4, 2, 1, 34, 56, 10))
+
+transmute(flights,
+          dep_time,
+          sched_dep_time,
+          dt_msm = ((dep_time %/% 100) * 60 + (dep_time %% 100)),
+          sdt_msm = (sched_dep_time %/% 100) * 60 + (sched_dep_time %% 100))
