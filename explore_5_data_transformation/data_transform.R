@@ -221,8 +221,27 @@ cummean(x)
 # ranking functions ranks the data-set
 min_rank(c(4, 2, 1, 34, 56, 10))
 
+
+# ---------------- Excersice 5.5.2 --------------------------
+# 1) Currently dep_time and sched_dep_time are convenient to look at,
+# but hard to compute with because they’re not really continuous numbers.
+# Convert them to a more convenient representation
+# of number of minutes since midnight.
+
 transmute(flights,
           dep_time,
           sched_dep_time,
-          dt_msm = ((dep_time %/% 100) * 60 + (dep_time %% 100)),
-          sdt_msm = (sched_dep_time %/% 100) * 60 + (sched_dep_time %% 100))
+          dt_msm = (((dep_time %/% 100) * 60 + (dep_time %% 100)) %% 1440),
+          sdt_msm = ((sched_dep_time %/% 100) * 60 + (sched_dep_time %% 100)) %% 1440)
+
+# 2) Compare air_time and arr_time - dep_time
+
+df <- transmute(flights,
+          dep_time = (((dep_time %/% 100) * 60 + (dep_time %% 100)) %% 1440),
+          arr_time = ((arr_time %/% 100) * 60 + (arr_time %% 100)) %% 1440,
+          air_time_diff = arr_time - dep_time)
+
+df
+
+# check number of non zero rows
+nrow(dplyr::filter(df, air_time_diff != 0))
