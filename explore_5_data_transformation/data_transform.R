@@ -245,3 +245,15 @@ df
 
 # check number of non zero rows
 nrow(dplyr::filter(df, air_time_diff != 0))
+
+# 3) Compare dep_time, sched_dep_time, and dep_delay.
+# How would you expect those three numbers to be related?
+
+(df <- transmute(flights,
+                dep_delay,
+                dep_time = (((dep_time %/% 100) * 60 + (dep_time %% 100)) %% 1440),
+                sched_dep_time = ((sched_dep_time %/% 100) * 60 + (sched_dep_time %% 100)) %% 1440,
+                diff = dep_time - sched_dep_time))
+
+# count number of rows not having 0 for difference
+nrow(dplyr::filter(df, diff != 0))
