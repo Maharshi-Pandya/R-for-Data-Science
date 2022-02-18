@@ -250,10 +250,30 @@ nrow(dplyr::filter(df, air_time_diff != 0))
 # How would you expect those three numbers to be related?
 
 (df <- transmute(flights,
-                dep_delay,
                 dep_time = (((dep_time %/% 100) * 60 + (dep_time %% 100)) %% 1440),
                 sched_dep_time = ((sched_dep_time %/% 100) * 60 + (sched_dep_time %% 100)) %% 1440,
-                diff = dep_time - sched_dep_time))
+                diff = dep_delay - (dep_time - sched_dep_time)))
 
 # count number of rows not having 0 for difference
 nrow(dplyr::filter(df, diff != 0))
+
+# temporary tibble for diff > 0
+tdf <- filter(df, diff > 0)
+# plot diff and scheduled dep time to see where diff is non zero
+ggplot(tdf, mapping=aes(sched_dep_time, diff)) + geom_point()
+
+
+# 4) Find 10 most delayed flights using ranking function
+df <- mutate(flights,
+             dep_delay_min_rank = min_rank(dep_delay))
+# arrange in descending order
+arrange(df,
+        desc(dep_delay_min_rank))
+
+
+# 5) What does 1:3 + 1:10 return? Why?
+(x <- 1:3 + 1:10)
+# This prints the result because of 'recycling'. If longer object length is 
+# multiple of shorter object length, this amounts to repeating the shorter 
+# object several times. Hence this behavior with a warning because 10 is not
+# a multiple of 3
