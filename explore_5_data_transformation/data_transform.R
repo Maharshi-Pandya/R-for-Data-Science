@@ -277,3 +277,30 @@ arrange(df,
 # multiple of shorter object length, this amounts to repeating the shorter 
 # object several times. Hence this behavior with a warning because 10 is not
 # a multiple of 3
+
+# -------------- SUMMARISE ----------------------
+# Collapse a dataframe to a single row
+# Effective with group_by
+
+?dplyr::summarise
+?dplyr::group_by
+
+by_day <- group_by(flights, year, month, day)
+summarise(by_day, delay = mean(dep_delay, na.rm=TRUE))
+
+# Relationship between distance and average delay for each destination
+?flights
+
+by_dest <- group_by(flights, dest)
+delay <- summarise(by_dest,
+                   dist = mean(distance, na.rm = TRUE),
+                   arr_delay = mean(arr_delay, na.rm = TRUE))
+delay <- filter(delay, dest != "HNL")
+delay
+ggplot(data = delay, mapping=aes(x = dist, y = arr_delay)) +
+  geom_point(alpha = 1/3) +
+  geom_smooth(se = FALSE)
+
+# As the distance increases the arrival delay increases
+# So somehow delay seems to increase for longer flights
+# Hmm nice...
